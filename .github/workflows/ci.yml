@@ -1,7 +1,4 @@
-name: Checkout code
-  uses: actions/checkout@v4
-  with:
-    lfs: true
+name: CI
 
 on:
   push:
@@ -11,11 +8,13 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: self-hosted   # ← changed
+    runs-on: self-hosted
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          lfs: true
 
       - name: Build Docker image
         run: docker build -t spaceinvaders:${{ github.sha }} .
