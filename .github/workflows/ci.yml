@@ -1,35 +1,27 @@
 name: CI
-
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
-
 jobs:
   build-and-test:
     runs-on: self-hosted
-
     steps:
-      steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           lfs: true
-
       - name: Pull LFS files
         run: git lfs pull
-
       - name: Build Docker image
         run: docker build -t spaceinvaders:${{ github.sha }} .
-
       - name: Smoke test
         run: |
           docker run -d --name ci_test -p 8001:8000 spaceinvaders:${{ github.sha }}
           sleep 5
           curl --fail http://localhost:8001 || (docker logs ci_test && exit 1)
           docker stop ci_test && docker rm ci_test
-
       - name: Deploy
         run: |
           docker-compose down
