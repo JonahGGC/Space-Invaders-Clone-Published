@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+.venv
+UnityGame/          # venv lives here — never goes into the image
+ 
+# Unity editor artifacts (only the WebGame/ build is needed)
+*.meta
+Library/
+Temp/
+Logs/
+UserSettings/
+ 
+# Git / CI
+.git/
+.github/
+.gitignore
+ 
+# Misc
+*.md
+.DS_Store
+Thumbs.db

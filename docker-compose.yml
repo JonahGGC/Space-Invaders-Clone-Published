@@ -1,0 +1,15 @@
+services:
+  web:
+    build: .
+    container_name: spaceinvaders
+    ports:
+      - "8000:8000"        # http://localhost:8000
+    volumes:
+      # Hot-reload main.py edits without rebuilding the image
+      - ./main.py:/app/main.py:ro
+      # Mount the WebGL build so you can swap Unity builds without rebuilding
+      - ./WebGame:/app/WebGame:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+ 
