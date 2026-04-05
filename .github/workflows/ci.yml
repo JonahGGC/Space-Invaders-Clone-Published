@@ -1,4 +1,7 @@
-name: CI
+name: Checkout code
+  uses: actions/checkout@v4
+  with:
+    lfs: true
 
 on:
   push:
