@@ -2,44 +2,29 @@ name: CI
 
 on:
   push:
-    branches: [main, master]
+    branches: [main]
   pull_request:
-    branches: [main, master]
+    branches: [main]
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted   # ← changed
 
     steps:
-      # ── 1. Checkout ────────────────────────────────────────────────────────
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # ── 2. Build Docker image ──────────────────────────────────────────────
       - name: Build Docker image
         run: docker build -t spaceinvaders:${{ github.sha }} .
 
-      # ── 3. Smoke-test: start container, hit the server, then stop ──────────
       - name: Smoke test
         run: |
-          docker run -d --name ci_test -p 8000:8000 spaceinvaders:${{ github.sha }}
-          # Give uvicorn a moment to start
+          docker run -d --name ci_test -p 8001:8000 spaceinvaders:${{ github.sha }}
           sleep 5
-          # Expect a 200 from the root endpoint
-          curl --fail http://localhost:8000 || (docker logs ci_test && exit 1)
+          curl --fail http://localhost:8001 || (docker logs ci_test && exit 1)
           docker stop ci_test && docker rm ci_test
 
-      # ── 4. (Optional) Push to Docker Hub ──────────────────────────────────
-      # Uncomment this block when you're ready to publish images.
-      # Add DOCKERHUB_USERNAME and DOCKERHUB_TOKEN to your repo secrets.
-      #
-      # - name: Log in to Docker Hub
-      #   uses: docker/login-action@v3
-      #   with:
-      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
-      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
-      #
-      # - name: Push image
-      #   run: |
-      #     docker tag spaceinvaders:${{ github.sha }} ${{ secrets.DOCKERHUB_USERNAME }}/spaceinvaders:latest
-      #     docker push ${{ secrets.DOCKERHUB_USERNAME }}/spaceinvaders:latest
+      - name: Deploy
+        run: |
+          docker-compose down
+          docker-compose up --build -d
