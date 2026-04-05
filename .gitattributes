@@ -1,0 +1,2 @@
+WebGame/TemplateData/* filter=lfs diff=lfs merge=lfs -text
+WebGame/Build/* filter=lfs diff=lfs merge=lfs -text
