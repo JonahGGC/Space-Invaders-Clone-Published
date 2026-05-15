@@ -108,4 +108,4 @@ git push → GitHub Actions → Docker build → Smoke test → Auto deploy ✅
 
 ## 👤 Author
 
-**Jonathan** — [@JonahGGC](https://github.com/JonahGGC)
+**Jonahtan González** — [@JonahGGC](https://github.com/JonahGGC)
